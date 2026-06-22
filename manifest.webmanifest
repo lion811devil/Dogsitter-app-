@@ -1,0 +1,10 @@
+{
+  "name": "Dogsitter Client App",
+  "short_name": "Dogsitter",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#4c1d95",
+  "theme_color": "#5b21b6",
+  "icons": []
+}

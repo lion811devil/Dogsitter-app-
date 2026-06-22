@@ -1,0 +1,1290 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Dogsitter Client App</title>
+<meta name="theme-color" content="#5b21b6">
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+:root{--purple:#6d28d9;--purple2:#4c1d95;--pink:#ec4899;--orange:#f97316;--yellow:#facc15;--cyan:#06b6d4;--green:#22c55e;--blue:#2563eb;--red:#ef4444;--text:#211633;--muted:#6b6178;--line:#eadcff;--shadow:0 20px 55px rgba(38,22,73,.20)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:radial-gradient(circle at 0% 0%,rgba(250,204,21,.75),transparent 28%),radial-gradient(circle at 100% 0%,rgba(236,72,153,.55),transparent 30%),linear-gradient(180deg,#4c1d95 0,#6d28d9 330px,#fff1d6 331px,#fffaf0 100%);color:var(--text)}button,input,select,textarea{font:inherit}.app-header{color:white;padding:18px 14px 70px}.topbar{max-width:1120px;margin:0 auto 24px;display:flex;align-items:center;justify-content:space-between;gap:14px}.brand{display:flex;align-items:center;gap:12px;min-width:0}.brand-logo{width:58px;height:58px;flex:0 0 58px;border-radius:20px;background:linear-gradient(135deg,var(--yellow),var(--orange),var(--pink));border:3px solid rgba(255,255,255,.42);display:grid;place-items:center;overflow:hidden;box-shadow:0 14px 35px rgba(0,0,0,.22)}.brand-logo img{width:100%;height:100%;object-fit:contain;padding:5px}.brand-logo span{color:#31105f;font-weight:1000;font-size:18px}.brand-text strong{display:block;font-size:17px;line-height:1.1}.brand-text small{display:block;color:rgba(255,255,255,.80);margin-top:3px}
+.hero{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:24px;align-items:stretch}.kicker{display:inline-flex;width:max-content;max-width:100%;padding:9px 13px;border-radius:999px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.25);color:#fff3aa;font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:950}.kicker.dark{background:#fff3b5;color:#6a3b00;border:0}.hero h1{margin:18px 0 14px;font-size:clamp(46px,11vw,86px);line-height:.86;letter-spacing:-.06em;text-shadow:0 12px 35px rgba(0,0,0,.24)}.hero p{margin:0;max-width:720px;color:rgba(255,255,255,.90);font-size:18px;line-height:1.48}.hero-actions{display:flex;gap:11px;flex-wrap:wrap;margin-top:24px}.btn{border:0;border-radius:18px;padding:14px 18px;font-weight:950;text-decoration:none;cursor:pointer}.btn-primary{color:#35156f;background:linear-gradient(135deg,var(--yellow),#fff1a8,var(--orange));box-shadow:0 16px 36px rgba(249,115,22,.28)}.btn-secondary{color:white;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28)}
+.app-preview{background:linear-gradient(180deg,#fffdf7,#ffe5c2);color:#35156f;border-radius:34px;padding:20px;border:4px solid rgba(255,255,255,.45);box-shadow:0 30px 85px rgba(0,0,0,.25);min-height:320px}.preview-icon{width:100px;height:100px;border-radius:30px;background:linear-gradient(135deg,var(--yellow),var(--orange),var(--pink));display:grid;place-items:center;font-size:56px;margin-bottom:16px}.preview-title{font-size:27px;font-weight:1000;margin-bottom:14px}.preview-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px;background:white;border:2px solid #f0dfff;border-left:9px solid var(--purple);border-radius:20px;margin-top:10px}.preview-row:nth-child(4){border-left-color:var(--pink)}.preview-row:nth-child(5){border-left-color:var(--orange)}.preview-row span{font-weight:900}.preview-row b{color:var(--purple)}
+.app-main{max-width:1120px;margin:-46px auto 60px;padding:0 12px;display:grid;grid-template-columns:320px minmax(0,1fr);gap:18px;align-items:start}.dashboard{position:sticky;top:12px;display:grid;gap:14px}.panel,.form{background:rgba(255,255,255,.96);border:2px solid rgba(255,255,255,.96);box-shadow:var(--shadow);border-radius:30px}.panel{padding:18px}.panel h2{margin:0 0 6px;color:var(--purple2);font-size:24px}.panel p{margin:0 0 12px;color:var(--muted);line-height:1.35}.logo-box{height:160px;border:3px dashed rgba(109,40,217,.35);border-radius:24px;background:linear-gradient(135deg,#fff3aa,#ffe1f2 55%,#d9fbff);display:grid;place-items:center;text-align:center;overflow:hidden}.logo-box img{display:none;max-width:100%;max-height:100%;object-fit:contain;padding:12px}.logo-placeholder strong{display:block;font-size:26px;color:var(--purple2)}.logo-placeholder small{color:var(--muted)}.upload-btn{display:block;margin-top:12px;padding:14px;border-radius:18px;color:white;text-align:center;font-weight:950;background:linear-gradient(135deg,var(--purple),var(--pink))}.upload-btn input{display:none}
+.ring{--value:0;width:126px;height:126px;margin:10px auto 16px;border-radius:50%;background:conic-gradient(var(--pink) calc(var(--value)*.36%),var(--orange) calc(var(--value)*.72%),var(--yellow) calc(var(--value)*1%),#eee1ff 0);display:grid;place-items:center;position:relative}.ring::after{content:"";position:absolute;inset:12px;border-radius:50%;background:white}.ring span{position:relative;z-index:1;font-size:28px;font-weight:1000;color:var(--purple2)}.progress-line{height:12px;border-radius:999px;background:#eee1ff;overflow:hidden}.progress-line span{display:block;width:0;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--purple),var(--pink),var(--orange),var(--yellow))}
+.summary{list-style:none;margin:6px 0 0;padding:0}.summary li{display:grid;grid-template-columns:90px minmax(0,1fr);gap:10px;padding:11px 0;border-bottom:1px solid #f0e5ff}.summary li:last-child{border-bottom:0}.summary span{color:var(--muted);font-weight:750}.summary b{text-align:right;word-break:break-word;color:var(--purple2)}
+.form{overflow:hidden}.form-intro{padding:26px;background:linear-gradient(135deg,#fff3aa,#ffe0f0 52%,#dffbff)}.form-intro h2{margin:12px 0 8px;font-size:36px;line-height:1;color:var(--purple2)}.form-intro p{margin:0;color:#625673;line-height:1.45}.step{--accent:var(--purple);--soft:#f3ecff;background:linear-gradient(90deg,var(--soft),#fff 48%);border-top:2px solid #f0e5ff}.step.purple{--accent:var(--purple);--soft:#f3ecff}.step.orange{--accent:var(--orange);--soft:#fff0df}.step.teal{--accent:var(--cyan);--soft:#e4fbff}.step.pink{--accent:var(--pink);--soft:#ffe8f4}.step.blue{--accent:var(--blue);--soft:#e8f1ff}.step.green{--accent:var(--green);--soft:#e8fff0}.step.red{--accent:var(--red);--soft:#ffe9e6}.step.gold{--accent:#d99200;--soft:#fff4c3}
+.step summary{list-style:none;cursor:pointer;padding:22px 26px;display:grid;grid-template-columns:60px minmax(0,1fr) 40px;gap:14px;align-items:center}.step summary::-webkit-details-marker{display:none}.step-number{width:60px;height:60px;border-radius:20px;color:white;background:var(--accent);display:grid;place-items:center;font-size:20px;font-weight:1000;box-shadow:0 16px 30px color-mix(in srgb,var(--accent) 30%,transparent)}.step-title h3{margin:0;color:var(--purple2);font-size:25px;line-height:1.1}.step-title p{margin:5px 0 0;color:var(--muted);line-height:1.35}.chevron{width:40px;height:40px;border-radius:14px;background:white;color:var(--accent);display:grid;place-items:center;font-size:24px;font-weight:1000;border:2px solid #f0e5ff;transition:.2s}.step[open] .chevron{transform:rotate(180deg)}
+.step-body{padding:0 26px 26px}.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}.field{display:grid;grid-template-columns:1fr;grid-template-rows:auto auto;gap:8px;min-width:0}.field.full{grid-column:1/-1}.field-title{display:block;min-height:22px;color:#25163d;font-weight:950;line-height:1.25}.control{width:100%;min-height:54px;border-radius:20px;border:2px solid #ecdfff;border-left:8px solid var(--accent);background:#fffdfb;color:var(--text);padding:14px 15px;outline:none;box-shadow:0 8px 18px rgba(36,16,79,.05)}textarea.control{min-height:116px;resize:vertical}.control:focus{border-color:var(--accent);box-shadow:0 0 0 5px color-mix(in srgb,var(--accent) 16%,transparent),0 8px 18px rgba(36,16,79,.08)}
+.conditional{display:none}.conditional.show{display:grid}.actions{position:sticky;bottom:0;display:flex;gap:12px;flex-wrap:wrap;align-items:center;padding:18px 26px;background:rgba(255,253,248,.96);backdrop-filter:blur(16px);border-top:2px solid #f0e5ff}.actions button{border:0;border-radius:20px;padding:15px 20px;font-weight:1000}#previewBtn{background:linear-gradient(135deg,var(--purple2),var(--purple));color:white}.actions button[type=submit]{color:#35156f;background:linear-gradient(135deg,var(--pink),var(--orange),var(--yellow))}#status{margin:0;font-weight:950;color:var(--purple)}
+@media(max-width:920px){.hero{grid-template-columns:1fr}.app-preview{display:none}.app-main{grid-template-columns:1fr;margin-top:-48px}.dashboard{position:relative;top:auto}}
+@media(max-width:700px){.app-header{padding:14px 12px 64px}.brand-text small{display:none}.hero h1{font-size:52px}.hero p{font-size:16px}.app-main{padding:0 10px}.panel,.form{border-radius:26px}.form-intro{padding:22px 16px}.form-intro h2{font-size:32px}.step summary{padding:18px 16px;grid-template-columns:50px minmax(0,1fr) 36px;gap:12px}.step-number{width:50px;height:50px;border-radius:17px}.step-title h3{font-size:22px}.chevron{width:36px;height:36px}.step-body{padding:0 16px 22px}.fields{grid-template-columns:1fr;gap:14px}.actions{padding:16px}.actions button{width:100%}}
+
+.hero-minimal{
+  max-width:1120px;
+  min-height:360px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+.hero-minimal .hero-main{
+  display:grid;
+  justify-items:center;
+}
+.hero-minimal h1{
+  margin:34px 0 28px;
+}
+.hero-minimal .hero-actions{
+  justify-content:center;
+  margin-top:0;
+}
+.hero-minimal .btn-primary{
+  font-size:18px;
+  min-width:220px;
+  text-align:center;
+}
+@media(max-width:700px){
+  .app-header{padding-bottom:58px}
+  .hero-minimal{min-height:300px}
+  .hero-minimal h1{font-size:56px;margin:26px 0 24px}
+}
+
+
+.step.violet{--accent:#8b5cf6;--soft:#f1ecff}
+.final-summary{
+  padding:26px;
+  background:linear-gradient(135deg,#fff8cf,#ffe4f3 52%,#e1fbff);
+  border-top:2px solid #f0e5ff;
+}
+.final-summary h2{
+  margin:12px 0 8px;
+  color:var(--purple2);
+  font-size:34px;
+  line-height:1;
+}
+.final-summary p{
+  margin:0 0 16px;
+  color:#625673;
+}
+.summary-logo{
+  width:92px;
+  height:92px;
+  border-radius:28px;
+  background:linear-gradient(135deg,var(--yellow),var(--orange),var(--pink));
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  border:3px solid rgba(255,255,255,.9);
+  box-shadow:0 16px 32px rgba(38,22,73,.18);
+}
+.summary-logo img{
+  display:none;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  padding:8px;
+}
+.summary-logo span{
+  color:#31105f;
+  font-weight:1000;
+}
+.summary-block{
+  margin-top:18px;
+  display:grid;
+  gap:14px;
+}
+.summary-section{
+  background:white;
+  border:2px solid #ecdfff;
+  border-left:8px solid var(--purple);
+  border-radius:22px;
+  padding:16px;
+  box-shadow:0 8px 18px rgba(36,16,79,.05);
+}
+.summary-section h3{
+  margin:0 0 10px;
+  color:var(--purple2);
+  font-size:20px;
+}
+.summary-section ul{
+  margin:0;
+  padding:0;
+  list-style:none;
+  display:grid;
+  gap:8px;
+}
+.summary-section li{
+  display:grid;
+  grid-template-columns:minmax(110px,.9fr) minmax(0,1.2fr);
+  gap:10px;
+  align-items:start;
+  border-top:1px solid #f4ebff;
+  padding-top:8px;
+}
+.summary-section li:first-child{
+  border-top:0;
+  padding-top:0;
+}
+.summary-section strong{
+  color:#6b6178;
+}
+.summary-section span{
+  color:#211633;
+  font-weight:850;
+  word-break:break-word;
+}
+.empty-summary{
+  padding:16px;
+  background:white;
+  border-radius:20px;
+  color:#6b6178;
+  border:2px dashed #ecdfff;
+}
+@media(max-width:700px){
+  .final-summary{padding:22px 16px}
+  .final-summary h2{font-size:30px}
+  .summary-section li{grid-template-columns:1fr;gap:3px}
+}
+
+
+/* Logo più grande e adattivo */
+.logo-box{
+  min-height:230px!important;
+  height:auto!important;
+  width:100%;
+  aspect-ratio:var(--logo-ratio, 1 / 1);
+  max-height:none!important;
+  transition:.25s ease;
+}
+.logo-box.has-logo{
+  background:white!important;
+  border-style:solid!important;
+  padding:8px;
+}
+.logo-box img{
+  width:100%!important;
+  height:100%!important;
+  max-width:none!important;
+  max-height:none!important;
+  object-fit:cover!important;
+  padding:0!important;
+  border-radius:20px;
+}
+.summary-logo{
+  width:min(100%,260px)!important;
+  height:auto!important;
+  aspect-ratio:var(--summary-logo-ratio, 1 / 1);
+  max-height:none!important;
+  border-radius:30px!important;
+}
+.summary-logo img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:cover!important;
+  padding:0!important;
+}
+@media(max-width:700px){
+  .logo-box{min-height:210px!important}
+}
+
+
+/* Quadranti logo adattivi: il contenitore segue il logo, non il contrario */
+.brand-logo.has-logo{
+  width:auto!important;
+  height:auto!important;
+  min-width:96px!important;
+  max-width:min(78vw,300px)!important;
+  aspect-ratio:var(--logo-ratio, 1 / 1);
+  padding:8px!important;
+  background:white!important;
+  border-radius:22px!important;
+}
+.brand-logo.has-logo img{
+  display:block!important;
+  width:100%!important;
+  height:auto!important;
+  max-height:130px!important;
+  object-fit:contain!important;
+  padding:0!important;
+}
+.logo-box{
+  min-height:270px!important;
+  height:auto!important;
+  width:100%;
+  aspect-ratio:var(--logo-ratio, 1 / 1);
+  max-height:none!important;
+  transition:.25s ease;
+}
+.logo-box.has-logo{
+  background:white!important;
+  border-style:solid!important;
+  padding:10px!important;
+}
+.logo-box img{
+  width:100%!important;
+  height:auto!important;
+  max-height:none!important;
+  object-fit:contain!important;
+  padding:0!important;
+  border-radius:18px;
+}
+.summary-logo{
+  width:min(100%,340px)!important;
+  height:auto!important;
+  aspect-ratio:var(--summary-logo-ratio, 1 / 1);
+  background:white!important;
+}
+.summary-logo img{
+  width:100%!important;
+  height:auto!important;
+  object-fit:contain!important;
+  padding:0!important;
+}
+@media(max-width:700px){
+  .brand-logo.has-logo{max-width:min(82vw,260px)!important}
+  .logo-box{min-height:230px!important}
+}
+
+
+/* CORREZIONE DEFINITIVA LOGO APP:
+   il logo mantiene proporzioni, ma NON allarga la pagina e NON crea zoom orizzontale */
+html,body{
+  max-width:100%;
+  overflow-x:hidden!important;
+}
+.brand-logo.has-logo{
+  width:96px!important;
+  height:96px!important;
+  min-width:96px!important;
+  max-width:96px!important;
+  aspect-ratio:auto!important;
+  padding:6px!important;
+  background:white!important;
+  border-radius:22px!important;
+  overflow:hidden!important;
+}
+.brand-logo.has-logo img{
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  object-fit:contain!important;
+  padding:0!important;
+}
+.logo-box{
+  width:100%!important;
+  max-width:450px!important;
+  min-height:220px!important;
+  height:220px!important;
+  aspect-ratio:auto!important;
+  margin:0 auto!important;
+  background:white!important;
+  border:3px solid rgba(109,40,217,.18)!important;
+  border-radius:26px!important;
+  padding:14px!important;
+  display:grid!important;
+  place-items:center!important;
+  overflow:hidden!important;
+}
+.logo-box.has-logo{
+  background:white!important;
+  border-style:solid!important;
+}
+.logo-box img{
+  display:block;
+  width:auto!important;
+  height:auto!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  object-fit:contain!important;
+  padding:0!important;
+  border-radius:0!important;
+}
+.summary-logo{
+  width:100%!important;
+  max-width:450px!important;
+  height:220px!important;
+  aspect-ratio:auto!important;
+  margin:0!important;
+  background:white!important;
+  border:3px solid rgba(109,40,217,.18)!important;
+  border-radius:26px!important;
+  padding:14px!important;
+  display:grid!important;
+  place-items:center!important;
+  overflow:hidden!important;
+}
+.summary-logo.has-logo img,
+.summary-logo img{
+  width:auto!important;
+  height:auto!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  object-fit:contain!important;
+  padding:0!important;
+}
+@media(max-width:700px){
+  .brand-logo.has-logo{
+    width:78px!important;
+    height:78px!important;
+    min-width:78px!important;
+    max-width:78px!important;
+  }
+  .logo-box,
+  .summary-logo{
+    max-width:100%!important;
+    height:200px!important;
+    min-height:200px!important;
+  }
+}
+
+
+.tariff-note{
+  grid-column:1/-1;
+  margin:-4px 0 0;
+  color:#6b6178;
+  font-weight:750;
+  background:#fff8dc;
+  border:2px solid #ffe39a;
+  border-radius:18px;
+  padding:12px 14px;
+}
+
+
+.profile-tools{
+  display:grid;
+  gap:12px;
+  margin:0 0 18px;
+  padding:16px;
+  border-radius:24px;
+  background:linear-gradient(135deg,#fff3aa,#ffe1f2 55%,#e6f7ff);
+  border:2px solid #ecdfff;
+}
+.profile-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.profile-actions button{
+  border:0;
+  border-radius:18px;
+  padding:14px 12px;
+  font-weight:1000;
+  cursor:pointer;
+}
+#saveDogsitterProfile{
+  color:white;
+  background:linear-gradient(135deg,var(--purple),var(--pink));
+}
+#removeDogsitterProfile{
+  color:#35156f;
+  background:linear-gradient(135deg,#fff3aa,#ffd76b);
+}
+.profile-note{
+  margin:0;
+  color:#6b6178;
+  font-weight:750;
+  line-height:1.35;
+}
+@media(max-width:700px){
+  .profile-actions{grid-template-columns:1fr}
+}
+
+
+.tariff-multi{
+  display:grid;
+  gap:10px;
+  width:100%;
+}
+.tariff-empty{
+  padding:14px;
+  border-radius:18px;
+  background:#fffdfb;
+  border:2px dashed #ecdfff;
+  color:#6b6178;
+  font-weight:850;
+}
+.tariff-option{
+  display:grid;
+  grid-template-columns:30px minmax(0,1fr) auto;
+  gap:12px;
+  align-items:center;
+  padding:14px;
+  border-radius:20px;
+  border:2px solid #ecdfff;
+  border-left:8px solid var(--accent);
+  background:#fffdfb;
+  box-shadow:0 8px 18px rgba(36,16,79,.05);
+}
+.tariff-option input{
+  width:22px;
+  height:22px;
+  accent-color:var(--accent);
+}
+.tariff-option span{
+  font-weight:900;
+  line-height:1.25;
+}
+.tariff-option b{
+  color:var(--purple2);
+  white-space:nowrap;
+}
+.tariff-total-card{
+  grid-column:1/-1;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:18px;
+  border-radius:22px;
+  background:linear-gradient(135deg,#fff3aa,#ffe1f2 60%,#e6f7ff);
+  border:2px solid #ecdfff;
+}
+.tariff-total-card span{
+  font-weight:950;
+  color:#35156f;
+}
+.tariff-total-card strong{
+  font-size:28px;
+  color:#35156f;
+}
+
+
+#status{
+  width:100%;
+  line-height:1.35;
+}
+.status-ok{
+  color:#15803d!important;
+}
+.status-warn{
+  color:#b45309!important;
+}
+.status-error{
+  color:#dc2626!important;
+}
+
+
+.signature-pad{
+  width:100%;
+  height:180px;
+  border-radius:22px;
+  border:2px solid #ecdfff;
+  border-left:8px solid var(--accent);
+  background:#fffdfb;
+  box-shadow:0 8px 18px rgba(36,16,79,.05);
+  touch-action:none;
+  display:block;
+}
+.signature-actions{
+  display:flex;
+  gap:10px;
+  margin-top:10px;
+}
+.signature-actions button{
+  border:0;
+  border-radius:16px;
+  padding:12px 14px;
+  font-weight:1000;
+  background:linear-gradient(135deg,#fff3aa,#ffd76b);
+  color:#35156f;
+}
+.privacy-card{
+  grid-column:1/-1;
+  display:grid;
+  grid-template-columns:30px minmax(0,1fr);
+  gap:12px;
+  align-items:start;
+  padding:16px;
+  border-radius:22px;
+  border:2px solid #ecdfff;
+  border-left:8px solid var(--accent);
+  background:white;
+  box-shadow:0 8px 18px rgba(36,16,79,.05);
+}
+.privacy-card input{
+  width:22px;
+  height:22px;
+  margin:0;
+  accent-color:var(--accent);
+}
+.privacy-card span{
+  font-weight:850;
+  line-height:1.35;
+}
+
+
+.discount-card{background:linear-gradient(135deg,#e0f2fe,#fff3aa 55%,#ffe1f2)!important}
+.final-total-card{background:linear-gradient(135deg,#bbf7d0,#fff3aa 60%,#fef3c7)!important;border-color:#86efac!important}
+.final-total-card strong{font-size:32px!important}
+
+</style>
+</head>
+<body>
+<header class="app-header">
+  <div class="topbar"><div class="brand"><div class="brand-logo" id="miniLogo"><span>K9</span></div><div class="brand-text"><strong>Dogsitter Client App</strong><small>Modulo professionale condivisibile</small></div></div></div>
+  <section class="hero hero-minimal">
+    <div class="hero-main">
+      <h1>Modulo Dogsitter</h1>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#modulo">Inizia compilazione</a>
+      </div>
+    </div>
+  </section>
+</header>
+
+<main class="app-main" id="modulo">
+  <aside class="dashboard">
+    <section class="panel"><h2>Logo</h2><p>Carica il marchio da inserire nel PDF.</p><div class="logo-box"><img id="logoPreview" alt="Logo caricato"><div class="logo-placeholder" id="logoPlaceholder"><strong>LOGO</strong><small>PNG / JPG / WEBP</small></div></div><label class="upload-btn">Carica logo<input id="logoInput" type="file" accept="image/png,image/jpeg,image/webp"></label></section>
+    <section class="panel"><h2>Avanzamento</h2><div class="ring" id="ring" style="--value:0"><span id="ringText">0%</span></div><div class="progress-line"><span id="progressBar"></span></div><p id="progressText">Compilazione avviata.</p></section>
+  </aside>
+
+  <form class="form" id="dogForm">
+    <section class="form-intro"><span class="kicker dark">Compilazione</span><h2>Raccolta dati cliente</h2></section>
+
+    <details class="step purple" open>
+      <summary><div class="step-number">01</div><div class="step-title"><h3>Dati proprietario</h3><p>Contatti principali e referente di emergenza.</p></div><div class="chevron">⌄</div></summary>
+      <div class="step-body"><div class="fields">
+        <label class="field"><span class="field-title">Nome e cognome proprietario</span><input class="control" name="ownerName" required autocomplete="name"></label>
+        <label class="field"><span class="field-title">Telefono proprietario</span><input class="control" name="ownerPhone" type="tel" required autocomplete="tel"></label>
+        <label class="field"><span class="field-title">Email proprietario</span><input class="control" name="ownerEmail" type="email" autocomplete="email"></label>
+        <label class="field"><span class="field-title">Comune / zona</span><select class="control" name="ownerArea"><option value="">Seleziona</option><option>San Giuliano Milanese</option><option>Desenzano del Garda</option><option>Milano e provincia</option><option>Brescia e provincia</option><option>Altro comune</option></select></label>
+        <label class="field conditional" data-show-when="ownerArea:Altro comune"><span class="field-title">Specificare altro comune</span><input class="control" name="ownerAreaOther"></label>
+        <label class="field"><span class="field-title">Tipo contatto di emergenza</span><select class="control" name="emergencyContactType"><option value="">Seleziona</option><option>Familiare convivente</option><option>Familiare non convivente</option><option>Amico / referente fidato</option><option>Veterinario</option><option>Altro referente</option></select></label>
+        <label class="field conditional" data-show-when="emergencyContactType:any"><span class="field-title">Nome contatto di emergenza</span><input class="control" name="emergencyContactName"></label>
+        <label class="field conditional" data-show-when="emergencyContactType:any"><span class="field-title">Telefono contatto di emergenza</span><input class="control" name="emergencyContactPhone" type="tel"></label>
+        <label class="field"><span class="field-title">Disponibilità reperibilità</span><select class="control" name="availability"><option value="">Seleziona</option><option>Sempre reperibile</option><option>Reperibile solo mattina</option><option>Reperibile solo pomeriggio</option><option>Reperibile solo sera</option><option>Non sempre reperibile</option></select></label>
+      </div></div>
+    </details>
+
+    <details class="step orange">
+      <summary><div class="step-number">02</div><div class="step-title"><h3>Dati cane</h3><p>Identificazione, caratteristiche e veterinario.</p></div><div class="chevron">⌄</div></summary>
+      <div class="step-body"><div class="fields">
+        <label class="field"><span class="field-title">Nome cane</span><input class="control" name="dogName" required></label>
+        <label class="field"><span class="field-title">Razza / tipologia</span><select class="control" name="breedType"><option value="">Seleziona</option><option>Razza definita</option><option>Meticcio</option><option>Tipo molossoide</option><option>Tipo pastore</option><option>Tipo terrier</option><option>Altro</option></select></label>
+        <label class="field conditional" data-show-when="breedType:any"><span class="field-title">Specificare razza / tipologia</span><input class="control" name="breedDetail"></label>
+        <label class="field"><span class="field-title">Taglia</span><select class="control" name="size"><option value="">Seleziona</option><option>Piccola</option><option>Media</option><option>Grande</option><option>Gigante</option></select></label>
+        <label class="field"><span class="field-title">Fascia età</span><select class="control" name="ageRange"><option value="">Seleziona</option><option>Cucciolo 2-6 mesi</option><option>Cucciolone 6-18 mesi</option><option>Adulto 18 mesi-7 anni</option><option>Senior oltre 7 anni</option></select></label>
+        <label class="field"><span class="field-title">Età precisa</span><input class="control" name="ageDetail" placeholder="Es. 4 anni"></label>
+        <label class="field"><span class="field-title">Peso indicativo</span><input class="control" name="weightDetail" placeholder="Es. 18 kg"></label>
+        <label class="field"><span class="field-title">Sesso</span><select class="control" name="sex"><option value="">Seleziona</option><option>Maschio</option><option>Femmina</option></select></label>
+        <label class="field"><span class="field-title">Sterilizzato / castrato?</span><select class="control" name="sterilized"><option value="">Seleziona</option><option>Sì</option><option>No</option><option>Non so</option></select></label>
+        <label class="field"><span class="field-title">Microchip</span><select class="control" name="microchip"><option value="">Seleziona</option><option>Presente</option><option>Assente</option><option>Non verificato</option></select></label>
+        <label class="field conditional" data-show-when="microchip:Presente"><span class="field-title">Numero microchip</span><input class="control" name="microchipNumber"></label>
+        <label class="field"><span class="field-title">Veterinario</span><select class="control" name="vetStatus"><option value="">Seleziona</option><option>Veterinario indicato dal cliente</option><option>Clinica di fiducia indicata</option><option>Nessun veterinario indicato</option><option>Da comunicare successivamente</option></select></label>
+        <label class="field conditional" data-show-when="vetStatus:Veterinario indicato dal cliente|Clinica di fiducia indicata|Da comunicare successivamente"><span class="field-title">Nome veterinario / clinica</span><input class="control" name="vetName"></label>
+        <label class="field conditional" data-show-when="vetStatus:Veterinario indicato dal cliente|Clinica di fiducia indicata|Da comunicare successivamente"><span class="field-title">Telefono veterinario / clinica</span><input class="control" name="vetPhone" type="tel"></label>
+      </div></div>
+    </details>
+
+
+    <details class="step violet">
+      <summary><div class="step-number">03</div><div class="step-title"><h3>Dati dogsitter</h3><p>Dati del professionista o referente che prende in carico il servizio.</p></div><div class="chevron">⌄</div></summary>
+      <div class="step-body">
+        <div class="profile-tools">
+          <label class="field full"><span class="field-title">Dati dogsitter presalvati</span><select class="control" id="dogsitterProfileSelect"><option value="">Seleziona profilo salvato</option></select></label>
+          <div class="profile-actions">
+            <button type="button" id="saveDogsitterProfile">Aggiungi dati</button>
+            <button type="button" id="removeDogsitterProfile">Rimuovi dati</button>
+          </div>
+          <p class="profile-note">I dati vengono salvati su questo dispositivo/browser e possono essere richiamati nei moduli successivi.</p>
+        </div>
+        <div class="fields">
+        <label class="field"><span class="field-title">Nome e cognome dogsitter</span><input class="control" name="dogsitterName"></label>
+        <label class="field"><span class="field-title">Telefono dogsitter</span><input class="control" name="dogsitterPhone" type="tel"></label>
+        <label class="field"><span class="field-title">Email dogsitter</span><input class="control" name="dogsitterEmail" type="email"></label>
+        <label class="field"><span class="field-title">Ruolo</span><select class="control" name="dogsitterRole"><option value="">Seleziona</option><option>Dogsitter</option><option>Dog walker</option><option>Educatore cinofilo</option><option>Istruttore cinofilo</option><option>Referente associazione</option><option>Altro ruolo</option></select></label>
+        <label class="field conditional" data-show-when="dogsitterRole:Altro ruolo"><span class="field-title">Specificare altro ruolo</span><input class="control" name="dogsitterRoleOther"></label>
+        <label class="field"><span class="field-title">Ente / associazione</span><select class="control" name="dogsitterOrganization"><option value="">Seleziona</option><option>K9 Mantrailing HRDD Tattico Napoletano</option><option>MANTRAILING RAGIÒ DI SOLE</option><option>Associazione cinofila</option><option>Libero professionista</option><option>Protezione Civile</option><option>Altro ente</option></select></label>
+        <label class="field conditional" data-show-when="dogsitterOrganization:Altro ente|Associazione cinofila|Protezione Civile"><span class="field-title">Nome ente / associazione</span><input class="control" name="dogsitterOrganizationName"></label>
+        <label class="field"><span class="field-title">Zona servizio</span><select class="control" name="dogsitterArea"><option value="">Seleziona</option><option>San Giuliano Milanese</option><option>Desenzano del Garda</option><option>Milano e provincia</option><option>Brescia e provincia</option><option>Servizio da concordare</option><option>Altro territorio</option></select></label>
+        <label class="field conditional" data-show-when="dogsitterArea:Altro territorio"><span class="field-title">Specificare territorio</span><input class="control" name="dogsitterAreaOther"></label>
+      </div></div>
+    </details>
+
+    <details class="step teal">
+      <summary><div class="step-number">04</div><div class="step-title"><h3>Salute e sicurezza</h3><p>Informazioni indispensabili per prevenire rischi.</p></div><div class="chevron">⌄</div></summary>
+      <div class="step-body"><div class="fields">
+        <label class="field"><span class="field-title">Vaccinazioni</span><select class="control" name="vaccines"><option value="">Seleziona</option><option>Aggiornate</option><option>Non aggiornate</option><option>Non so</option><option>Da verificare</option></select></label>
+        <label class="field"><span class="field-title">Antiparassitario</span><select class="control" name="parasites"><option value="">Seleziona</option><option>Aggiornato</option><option>Non aggiornato</option><option>Non so</option><option>Da verificare</option></select></label>
+        <label class="field"><span class="field-title">Patologie note</span><select class="control" name="illnesses"><option value="">Seleziona</option><option>Nessuna patologia nota</option><option>Problemi articolari</option><option>Problemi cardiaci</option><option>Problemi respiratori</option><option>Epilessia / crisi</option><option>Problemi gastrointestinali</option><option>Altro da approfondire</option></select></label>
+        <label class="field conditional" data-show-when="illnesses:Problemi articolari|Problemi cardiaci|Problemi respiratori|Epilessia / crisi|Problemi gastrointestinali|Altro da approfondire"><span class="field-title">Dettaglio patologia</span><textarea class="control" name="illnessesDetail"></textarea></label>
+        <label class="field"><span class="field-title">Allergie</span><select class="control" name="allergies"><option value="">Seleziona</option><option>Nessuna allergia nota</option><option>Allergia alimentare</option><option>Allergia ambientale</option><option>Allergia a farmaci</option><option>Altro da approfondire</option></select></label>
+        <label class="field conditional" data-show-when="allergies:Allergia alimentare|Allergia ambientale|Allergia a farmaci|Altro da approfondire"><span class="field-title">Dettaglio allergie</span><textarea class="control" name="allergiesDetail"></textarea></label>
+        <label class="field"><span class="field-title">Farmaci / terapie</span><select class="control" name="medicines"><option value="">Seleziona</option><option>Nessuna terapia</option><option>Terapia giornaliera</option><option>Terapia occasionale</option><option>Farmaci solo al bisogno</option><option>Da verificare con veterinario</option></select></label>
+        <label class="field conditional" data-show-when="medicines:Terapia giornaliera|Terapia occasionale|Farmaci solo al bisogno|Da verificare con veterinario"><span class="field-title">Dettaglio farmaci / dosaggio</span><textarea class="control" name="medicinesDetail"></textarea></label>
+        <label class="field"><span class="field-title">Livello rischio sanitario</span><select class="control" name="healthRisk"><option value="">Seleziona</option><option>Basso</option><option>Medio</option><option>Alto</option><option>Da valutare prima del servizio</option></select></label>
+      </div></div>
+    </details>
+
+    <details class="step pink">
+      <summary><div class="step-number">05</div><div class="step-title"><h3>Alimentazione e routine</h3><p>Abitudini quotidiane, pasti, premi e indicazioni.</p></div><div class="chevron">⌄</div></summary>
+      <div class="step-body"><div class="fields">
+        <label class="field"><span class="field-title">Tipo alimentazione</span><select class="control" name="foodType"><option value="">Seleziona</option><option>Crocchette</option><option>Umido</option><option>Alimentazione mista</option><option>Casalinga</option><option>BARF</option><option>Dieta veterinaria</option><option>Altro</option></select></label>
+        <label class="field conditional" data-show-when="foodType:any"><span class="field-title">Marca / alimento / note dieta</span><input class="control" name="foodDetail"></label>
+        <label class="field"><span class="field-title">Numero pasti</span><select class="control" name="meals"><option value="">Seleziona</option><option>1 pasto al giorno</option><option>2 pasti al giorno</option><option>3 pasti al giorno</option><option>Pasti frazionati</option></select></label>
+        <label class="field conditional" data-show-when="meals:any"><span class="field-title">Orari pasti</span><input class="control" name="mealTimes" placeholder="Es. 8:00 e 19:00"></label>
+        <label class="field"><span class="field-title">Premi alimentari</span><select class="control" name="treats"><option value="">Seleziona</option><option>Consentiti</option><option>Non consentiti</option><option>Solo premi forniti dal proprietario</option><option>Solo previo consenso</option></select></label>
+        <label class="field conditional" data-show-when="treats:Consentiti|Solo premi forniti dal proprietario|Solo previo consenso"><span class="field-title">Premi consentiti / vietati</span><input class="control" name="treatsDetail"></label>
+        <label class="field"><span class="field-title">Regole domestiche</span><select class="control" name="homeRules"><option value="">Seleziona</option><option>Può salire su divano/letto</option><option>Non può salire su divano/letto</option><option>Accesso limitato ad alcune stanze</option><option>Regole da verificare</option></select></label>
+        <label class="field conditional" data-show-when="homeRules:Accesso limitato ad alcune stanze|Regole da verificare"><span class="field-title">Dettaglio regole domestiche</span><textarea class="control" name="homeRulesDetail"></textarea></label>
+      </div></div>
+    </details>
+
+    <details class="step blue">
+      <summary><div class="step-number">06</div><div class="step-title"><h3>Comportamento</h3><p>Socialità, paure, criticità e segnali da osservare.</p></div><div class="chevron">⌄</div></summary>
+      <div class="step-body"><div class="fields">
+        <label class="field"><span class="field-title">Carattere generale</span><select class="control" name="character"><option value="">Seleziona</option><option>Socievole</option><option>Timido</option><option>Diffidente</option><option>Energico</option><option>Molto tranquillo</option><option>Reattivo</option><option>Da valutare</option></select></label>
+        <label class="field"><span class="field-title">Con persone adulte</span><select class="control" name="adults"><option value="">Seleziona</option><option>Socievole</option><option>Diffidente</option><option>Reattivo</option><option>Da valutare</option></select></label>
+        <label class="field"><span class="field-title">Con bambini</span><select class="control" name="children"><option value="">Seleziona</option><option>Socievole</option><option>Diffidente</option><option>Reattivo</option><option>Da evitare</option><option>Mai testato</option></select></label>
+        <label class="field"><span class="field-title">Con altri cani</span><select class="control" name="dogs"><option value="">Seleziona</option><option>Socievole</option><option>Selettivo</option><option>Reattivo</option><option>Da evitare</option><option>Mai testato</option></select></label>
+        <label class="field"><span class="field-title">Paure / fobie</span><select class="control" name="fears"><option value="">Seleziona</option><option>Nessuna paura nota</option><option>Rumori forti</option><option>Temporali / fuochi</option><option>Persone sconosciute</option><option>Cani sconosciuti</option><option>Traffico / mezzi</option><option>Altro da approfondire</option></select></label>
+        <label class="field conditional" data-show-when="fears:Rumori forti|Temporali / fuochi|Persone sconosciute|Cani sconosciuti|Traffico / mezzi|Altro da approfondire"><span class="field-title">Dettaglio paure / fobie</span><textarea class="control" name="fearsDetail"></textarea></label>
+        <label class="field"><span class="field-title">Storico morsi</span><select class="control" name="biteHistory"><option value="">Seleziona</option><option>Nessun episodio</option><option>Morso a persona</option><option>Morso ad altro cane</option><option>Pinzata / avviso</option><option>Da approfondire obbligatoriamente</option></select></label>
+        <label class="field conditional" data-show-when="biteHistory:Morso a persona|Morso ad altro cane|Pinzata / avviso|Da approfondire obbligatoriamente"><span class="field-title">Dettaglio episodio morso / pinzata</span><textarea class="control" name="biteHistoryDetail"></textarea></label>
+        <label class="field"><span class="field-title">Possessività</span><select class="control" name="resourceGuarding"><option value="">Seleziona</option><option>Assente</option><option>Su cibo</option><option>Su giochi</option><option>Su spazi</option><option>Su persone</option><option>Da valutare</option></select></label>
+        <label class="field conditional" data-show-when="resourceGuarding:Su cibo|Su giochi|Su spazi|Su persone|Da valutare"><span class="field-title">Dettaglio possessività</span><textarea class="control" name="resourceGuardingDetail"></textarea></label>
+      </div></div>
+    </details>
+
+    <details class="step green">
+      <summary><div class="step-number">07</div><div class="step-title"><h3>Passeggiata</h3><p>Condotta, attrezzatura, trigger e aree da evitare.</p></div><div class="chevron">⌄</div></summary>
+      <div class="step-body"><div class="fields">
+        <label class="field"><span class="field-title">Attrezzatura usata</span><select class="control" name="equipment"><option value="">Seleziona</option><option>Pettorina ad H</option><option>Pettorina norvegese</option><option>Collare fisso</option><option>Collare semistrozzo</option><option>Guinzaglio lungo</option><option>Da verificare</option></select></label>
+        <label class="field conditional" data-show-when="equipment:any"><span class="field-title">Dettaglio attrezzatura / taglia</span><input class="control" name="equipmentDetail"></label>
+        <label class="field"><span class="field-title">Reazione a cani</span><select class="control" name="dogTriggers"><option value="">Seleziona</option><option>Ignora</option><option>Vuole salutare</option><option>Si agita</option><option>Abbaia</option><option>Reattivo</option><option>Da evitare</option></select></label>
+        <label class="field"><span class="field-title">Reazione a bici / auto / runner</span><select class="control" name="movingTriggers"><option value="">Seleziona</option><option>Indifferente</option><option>Si spaventa</option><option>Insegue</option><option>Abbaia</option><option>Da gestire con distanza</option></select></label>
+        <label class="field"><span class="field-title">Zone da evitare</span><select class="control" name="avoidAreas"><option value="">Seleziona</option><option>Nessuna zona particolare</option><option>Aree cani</option><option>Strade trafficate</option><option>Luoghi affollati</option><option>Presenza bambini</option><option>Presenza altri animali</option></select></label>
+        <label class="field conditional" data-show-when="avoidAreas:Aree cani|Strade trafficate|Luoghi affollati|Presenza bambini|Presenza altri animali"><span class="field-title">Dettaglio zone da evitare</span><textarea class="control" name="avoidAreasDetail"></textarea></label>
+        <label class="field"><span class="field-title">Libero dal guinzaglio</span><select class="control" name="offLeash"><option value="">Seleziona</option><option>No</option><option>Sì, solo area chiusa</option><option>Sì, con autorizzazione scritta</option><option>Da non lasciare mai libero</option></select></label>
+        <label class="field"><span class="field-title">Livello gestione passeggiata</span><select class="control" name="walkLevel"><option value="">Seleziona</option><option>Semplice</option><option>Media attenzione</option><option>Gestione esperta</option><option>Da valutare prima del servizio</option></select></label>
+      </div></div>
+    </details>
+
+    <details class="step red">
+      <summary><div class="step-number">08</div><div class="step-title"><h3>Servizio richiesto</h3><p>Tipologia, date, orari, chiavi e note operative.</p></div><div class="chevron">⌄</div></summary>
+      <div class="step-body"><div class="fields">
+        <label class="field"><span class="field-title">Tipo servizio</span><select class="control" name="serviceType"><option value="">Seleziona</option><option>Dog Walking</option><option>Dogsitting a domicilio</option><option>Visita a domicilio</option><option>Pensione diurna</option><option>Accompagnamento veterinario</option><option>Trasporto cane</option><option>Somministrazione farmaci</option><option>Servizio emergenza</option><option>Altro servizio</option></select></label>
+        <label class="field conditional" data-show-when="serviceType:Altro servizio"><span class="field-title">Specificare altro servizio</span><input class="control" name="serviceOther"></label>
+        <label class="field"><span class="field-title">Frequenza</span><select class="control" name="frequency"><option value="">Seleziona</option><option>Una volta</option><option>Giornaliero</option><option>Settimanale</option><option>Weekend</option><option>Occasionale</option><option>Da concordare</option></select></label>
+        <label class="field"><span class="field-title">Numero uscite / visite al giorno</span><select class="control" name="dailyVisits"><option value="">Seleziona</option><option>1 uscita / visita al giorno</option><option>2 uscite / visite al giorno</option><option>3 uscite / visite al giorno</option><option>4 uscite / visite al giorno</option><option>Da concordare</option></select></label>
+        <label class="field conditional" data-show-when="dailyVisits:1 uscita / visita al giorno|2 uscite / visite al giorno|3 uscite / visite al giorno|4 uscite / visite al giorno|Da concordare"><span class="field-title">Fascia oraria 1ª uscita / visita</span><select class="control" name="timeSlot1"><option value="">Seleziona</option><option>Mattina presto 6:00-8:00</option><option>Mattina 8:00-11:00</option><option>Pausa pranzo 11:00-14:00</option><option>Pomeriggio 14:00-17:00</option><option>Tardo pomeriggio 17:00-19:00</option><option>Sera 19:00-22:00</option><option>Da concordare</option></select></label>
+        <label class="field conditional" data-show-when="dailyVisits:2 uscite / visite al giorno|3 uscite / visite al giorno|4 uscite / visite al giorno"><span class="field-title">Fascia oraria 2ª uscita / visita</span><select class="control" name="timeSlot2"><option value="">Seleziona</option><option>Mattina presto 6:00-8:00</option><option>Mattina 8:00-11:00</option><option>Pausa pranzo 11:00-14:00</option><option>Pomeriggio 14:00-17:00</option><option>Tardo pomeriggio 17:00-19:00</option><option>Sera 19:00-22:00</option><option>Da concordare</option></select></label>
+        <label class="field conditional" data-show-when="dailyVisits:3 uscite / visite al giorno|4 uscite / visite al giorno"><span class="field-title">Fascia oraria 3ª uscita / visita</span><select class="control" name="timeSlot3"><option value="">Seleziona</option><option>Mattina presto 6:00-8:00</option><option>Mattina 8:00-11:00</option><option>Pausa pranzo 11:00-14:00</option><option>Pomeriggio 14:00-17:00</option><option>Tardo pomeriggio 17:00-19:00</option><option>Sera 19:00-22:00</option><option>Da concordare</option></select></label>
+        <label class="field conditional" data-show-when="dailyVisits:4 uscite / visite al giorno"><span class="field-title">Fascia oraria 4ª uscita / visita</span><select class="control" name="timeSlot4"><option value="">Seleziona</option><option>Mattina presto 6:00-8:00</option><option>Mattina 8:00-11:00</option><option>Pausa pranzo 11:00-14:00</option><option>Pomeriggio 14:00-17:00</option><option>Tardo pomeriggio 17:00-19:00</option><option>Sera 19:00-22:00</option><option>Da concordare</option></select></label>
+        <label class="field"><span class="field-title">Data indicativa inizio</span><input class="control" name="startDate" type="date"></label>
+        <label class="field"><span class="field-title">Data fine servizio</span><input class="control" name="endDate" type="date"></label>
+        <label class="field"><span class="field-title">Durata uscita / visita</span><select class="control" name="duration"><option value="">Seleziona</option><option>30 minuti</option><option>45 minuti</option><option>60 minuti</option><option>Oltre 60 minuti</option><option>Da concordare</option></select></label>
+        <label class="field full"><span class="field-title">Sconto applicato</span><select class="control" name="discountRate" id="discountRateSelect"><option value="0">Nessuno sconto</option><option value="5">Sconto 5%</option><option value="10">Sconto 10%</option></select></label>
+        <div class="tariff-total-card discount-card">
+          <span>Sconto selezionato</span>
+          <strong id="discountDisplay">0%</strong>
+        </div>
+        <div class="field full">
+          <span class="field-title">Tariffario concordato</span>
+          <div id="tariffMultiSelect" class="tariff-multi">
+            <div class="tariff-empty">Prima seleziona il tipo servizio.</div>
+          </div>
+          <input type="hidden" name="dailyRate" id="dailyRateSummary">
+          <input type="hidden" name="dailyRateTotal" id="dailyRateTotal">
+          <input type="hidden" name="periodDays" id="periodDays">
+          <input type="hidden" name="periodSubtotal" id="periodSubtotal">
+          <input type="hidden" name="discountAmount" id="discountAmount">
+          <input type="hidden" name="periodFinalTotal" id="periodFinalTotal">
+        </div>
+        <div class="tariff-note">Puoi selezionare più voci. Il totale concordato viene calcolato automaticamente.</div>
+        <div class="tariff-total-card">
+          <span>Totale giornaliero</span>
+          <strong id="tariffTotalDisplay">0 €</strong>
+        </div>
+        <div class="tariff-total-card">
+          <span>Totale giorni periodo</span>
+          <strong id="periodDaysDisplay">0</strong>
+        </div>
+        <div class="tariff-total-card">
+          <span>Totale periodo prima dello sconto</span>
+          <strong id="periodSubtotalDisplay">0 €</strong>
+        </div>
+        <div class="tariff-total-card discount-card">
+          <span>Sconto applicato</span>
+          <strong id="discountAmountDisplay">0 €</strong>
+        </div>
+        <div class="tariff-total-card final-total-card">
+          <span>Totale finale concordato</span>
+          <strong id="periodFinalTotalDisplay">0 €</strong>
+        </div>
+        <label class="field conditional custom-rate-field" data-show-when="customRateSelected:true"><span class="field-title">Importo tariffa personalizzata (€)</span><input class="control" name="customDailyRate" inputmode="decimal" placeholder="Es. 45"></label>
+        <label class="field"><span class="field-title">Modalità pagamento</span><select class="control" name="paymentMethod"><option value="">Seleziona</option><option>Contanti</option><option>Bonifico</option><option>PayPal</option><option>Satispay</option><option>Carta</option><option>Altro</option></select></label>
+        <label class="field conditional" data-show-when="paymentMethod:Altro"><span class="field-title">Specificare modalità pagamento</span><input class="control" name="paymentMethodOther"></label>
+        <label class="field"><span class="field-title">Stato cliente</span><select class="control" name="clientStatus"><option>Nuovo</option><option>Attivo</option><option>Cliente abituale</option><option>Sospeso</option><option>Terminato</option></select></label>
+        <label class="field"><span class="field-title">Stato pagamento</span><select class="control" name="paymentStatus"><option>Da pagare</option><option>Acconto ricevuto</option><option>Pagato</option><option>Abbonamento attivo</option></select></label>
+        <label class="field"><span class="field-title">Chiavi affidate?</span><select class="control" name="keys"><option value="">Seleziona</option><option>Sì</option><option>No</option><option>Da concordare</option></select></label>
+        <label class="field conditional" data-show-when="keys:Sì|Da concordare"><span class="field-title">Modalità consegna chiavi</span><select class="control" name="keysMode"><option value="">Seleziona</option><option>Consegna a mano</option><option>Ritiro presso domicilio</option><option>Cassetta sicurezza</option><option>Da concordare</option></select></label>
+        <label class="field"><span class="field-title">Aggiornamenti al proprietario</span><select class="control" name="updates"><option value="">Seleziona</option><option>Messaggio WhatsApp</option><option>Foto/video</option><option>Solo emergenze</option><option>Report a fine servizio</option><option>Da concordare</option></select></label>
+      </div></div>
+    </details>
+
+    <details class="step gold">
+      <summary><div class="step-number">09</div><div class="step-title"><h3>Autorizzazioni</h3><p>Consensi operativi, emergenza veterinaria e trattamento dati.</p></div><div class="chevron">⌄</div></summary>
+      <div class="step-body"><div class="fields">
+        <label class="field"><span class="field-title">Contatto veterinario in emergenza</span><select class="control" name="authVet"><option value="">Seleziona</option><option>Autorizzo</option><option>Non autorizzo</option><option>Solo dopo contatto telefonico</option></select></label>
+        <label class="field"><span class="field-title">Trasporto in clinica veterinaria</span><select class="control" name="authTransport"><option value="">Seleziona</option><option>Autorizzo</option><option>Non autorizzo</option><option>Solo dopo contatto telefonico</option></select></label>
+        <label class="field"><span class="field-title">Trattamento dati</span><select class="control" name="authData" required><option value="">Seleziona</option><option>Autorizzo</option><option>Non autorizzo</option></select></label>
+        <label class="field"><span class="field-title">Foto / video del cane</span><select class="control" name="authPhoto"><option value="">Seleziona</option><option>Autorizzo uso privato</option><option>Autorizzo uso promozionale</option><option>Non autorizzo</option></select></label>
+        <label class="field full"><span class="field-title">Firma digitale / nome e cognome del proprietario</span><input class="control" name="signature" required></label>
+      </div></div>
+    </details>
+
+
+
+    <details class="step gold" open>
+      <summary><div class="step-number">10</div><div class="step-title"><h3>Privacy e firme</h3><p>Consenso GDPR e firme digitali sullo schermo.</p></div><div class="chevron">⌄</div></summary>
+      <div class="step-body">
+        <div class="fields">
+          <label class="privacy-card">
+            <input type="checkbox" name="gdprConsent" value="ACCETTATO" required>
+            <span>Dichiaro di aver letto l’informativa privacy e autorizzo il trattamento dei dati personali ai sensi del Regolamento UE 2016/679 (GDPR).</span>
+          </label>
+
+          <div class="field full">
+            <span class="field-title">Firma cliente</span>
+            <canvas class="signature-pad" id="customerSignaturePad"></canvas>
+            <input type="hidden" name="customerSignatureData" id="customerSignatureData">
+            <div class="signature-actions"><button type="button" id="clearCustomerSignature">Cancella firma cliente</button></div>
+          </div>
+
+          <div class="field full">
+            <span class="field-title">Firma dogsitter</span>
+            <canvas class="signature-pad" id="dogsitterSignaturePad"></canvas>
+            <input type="hidden" name="dogsitterSignatureData" id="dogsitterSignatureData">
+            <div class="signature-actions"><button type="button" id="clearDogsitterSignature">Cancella firma dogsitter</button></div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <section class="final-summary" id="riepilogoFinale">
+      <div class="summary-logo">
+        <img id="summaryLogoImg" alt="Logo nel riepilogo">
+        <span id="summaryLogoFallback">LOGO</span>
+      </div>
+      <h2>Riepilogo finale</h2>
+      <p>Qui compaiono solo le risposte selezionate o compilate, divise per sezione.</p>
+      <div id="finalSummaryContent" class="summary-block">
+        <div class="empty-summary">Compila il modulo per visualizzare il riepilogo.</div>
+      </div>
+    </section>
+
+    <div class="actions"><button type="button" id="previewBtn">Genera PDF</button><button type="submit">Invia PDF</button><p id="status"></p></div>
+  </form>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script>
+const form=document.getElementById('dogForm'),statusEl=document.getElementById('status'),progressBar=document.getElementById('progressBar'),progressText=document.getElementById('progressText'),ring=document.getElementById('ring'),ringText=document.getElementById('ringText'),logoInput=document.getElementById('logoInput'),logoPreview=document.getElementById('logoPreview'),logoPlaceholder=document.getElementById('logoPlaceholder'),miniLogo=document.getElementById('miniLogo'),demoFillBtn=document.getElementById('demoFillBtn');let logoDataUrl='';let logoRatio=1;
+const labels={endDate:'Data fine servizio',discountRate:'Sconto applicato',periodDays:'Totale giorni periodo',periodSubtotal:'Totale periodo prima dello sconto',discountAmount:'Importo sconto',periodFinalTotal:'Totale finale concordato',clientStatus:'Stato cliente',paymentStatus:'Stato pagamento',gdprConsent:'Consenso privacy GDPR',customerSignatureData:'Firma cliente',dogsitterSignatureData:'Firma dogsitter',dailyRate:'Tariffe selezionate',dailyRateTotal:'Totale concordato',customDailyRate:'Importo tariffa personalizzata',paymentMethod:'Modalità pagamento',paymentMethodOther:'Altra modalità pagamento',dogsitterName:'Nome dogsitter',dogsitterPhone:'Telefono dogsitter',dogsitterEmail:'Email dogsitter',dogsitterRole:'Ruolo dogsitter',dogsitterRoleOther:'Altro ruolo dogsitter',dogsitterOrganization:'Ente/associazione dogsitter',dogsitterOrganizationName:'Nome ente/associazione',dogsitterArea:'Zona servizio dogsitter',dogsitterAreaOther:'Altro territorio dogsitter',ownerName:'Nome proprietario',ownerPhone:'Telefono proprietario',ownerEmail:'Email proprietario',ownerArea:'Comune/zona',ownerAreaOther:'Altro comune',emergencyContactType:'Tipo contatto emergenza',emergencyContactName:'Nome contatto emergenza',emergencyContactPhone:'Telefono contatto emergenza',availability:'Reperibilità proprietario',dogName:'Nome cane',breedType:'Razza/tipologia',breedDetail:'Dettaglio razza/tipologia',size:'Taglia',ageRange:'Fascia età',ageDetail:'Età precisa',weightDetail:'Peso indicativo',sex:'Sesso',sterilized:'Sterilizzato/castrato',microchip:'Microchip',microchipNumber:'Numero microchip',vetStatus:'Veterinario',vetName:'Nome veterinario/clinica',vetPhone:'Telefono veterinario/clinica',vaccines:'Vaccinazioni',parasites:'Antiparassitario',illnesses:'Patologie note',illnessesDetail:'Dettaglio patologia',allergies:'Allergie',allergiesDetail:'Dettaglio allergie',medicines:'Farmaci/terapie',medicinesDetail:'Dettaglio farmaci/dosaggio',healthRisk:'Livello rischio sanitario',foodType:'Tipo alimentazione',foodDetail:'Marca/alimento/note dieta',meals:'Numero pasti',mealTimes:'Orari pasti',treats:'Premi alimentari',treatsDetail:'Premi consentiti/vietati',homeRules:'Regole domestiche',homeRulesDetail:'Dettaglio regole domestiche',character:'Carattere generale',adults:'Con adulti',children:'Con bambini',dogs:'Con altri cani',fears:'Paure/fobie',fearsDetail:'Dettaglio paure/fobie',biteHistory:'Storico morsi',biteHistoryDetail:'Dettaglio morso/pinzata',resourceGuarding:'Possessività',resourceGuardingDetail:'Dettaglio possessività',equipment:'Attrezzatura',equipmentDetail:'Dettaglio attrezzatura',dogTriggers:'Reazione a cani',movingTriggers:'Reazione bici/auto/runner',avoidAreas:'Zone da evitare',avoidAreasDetail:'Dettaglio zone da evitare',offLeash:'Libero dal guinzaglio',walkLevel:'Livello gestione passeggiata',serviceType:'Tipo servizio',serviceOther:'Altro servizio',frequency:'Frequenza',dailyVisits:'Numero uscite/visite al giorno',timeSlot1:'Fascia oraria 1ª uscita/visita',timeSlot2:'Fascia oraria 2ª uscita/visita',timeSlot3:'Fascia oraria 3ª uscita/visita',timeSlot4:'Fascia oraria 4ª uscita/visita',startDate:'Data inizio',duration:'Durata',keys:'Chiavi affidate',keysMode:'Modalità consegna chiavi',updates:'Aggiornamenti',authVet:'Contatto veterinario',authTransport:'Trasporto clinica',authData:'Trattamento dati',authPhoto:'Foto/video',signature:'Firma proprietario'};
+const pdfOrder=['ownerName','ownerPhone','ownerEmail','ownerArea','ownerAreaOther','emergencyContactType','emergencyContactName','emergencyContactPhone','availability','dogName','breedType','breedDetail','size','ageRange','ageDetail','weightDetail','sex','sterilized','microchip','microchipNumber','vetStatus','vetName','vetPhone','vaccines','parasites','illnesses','illnessesDetail','allergies','allergiesDetail','medicines','medicinesDetail','healthRisk','foodType','foodDetail','meals','mealTimes','treats','treatsDetail','homeRules','homeRulesDetail','character','adults','children','dogs','fears','fearsDetail','biteHistory','biteHistoryDetail','resourceGuarding','resourceGuardingDetail','equipment','equipmentDetail','dogTriggers','movingTriggers','avoidAreas','avoidAreasDetail','offLeash','walkLevel','serviceType','serviceOther','frequency','timeSlot','startDate','duration','keys','keysMode','updates','authVet','authTransport','authData','authPhoto','signature'];
+const sectionGroups=[['01 - DATI PROPRIETARIO',['ownerName','ownerPhone','ownerEmail','ownerArea','ownerAreaOther','emergencyContactType','emergencyContactName','emergencyContactPhone','availability']],['02 - DATI CANE',['dogName','breedType','breedDetail','size','ageRange','ageDetail','weightDetail','sex','sterilized','microchip','microchipNumber','vetStatus','vetName','vetPhone']],['03 - DATI DOGSITTER',['dogsitterName','dogsitterPhone','dogsitterEmail','dogsitterRole','dogsitterRoleOther','dogsitterOrganization','dogsitterOrganizationName','dogsitterArea','dogsitterAreaOther']],['04 - SALUTE E SICUREZZA',['vaccines','parasites','illnesses','illnessesDetail','allergies','allergiesDetail','medicines','medicinesDetail','healthRisk']],['05 - ALIMENTAZIONE E ROUTINE',['foodType','foodDetail','meals','mealTimes','treats','treatsDetail','homeRules','homeRulesDetail']],['06 - COMPORTAMENTO',['character','adults','children','dogs','fears','fearsDetail','biteHistory','biteHistoryDetail','resourceGuarding','resourceGuardingDetail']],['07 - PASSEGGIATA',['equipment','equipmentDetail','dogTriggers','movingTriggers','avoidAreas','avoidAreasDetail','offLeash','walkLevel']],['08 - SERVIZIO RICHIESTO',['serviceType','serviceOther','frequency','dailyVisits','timeSlot1','timeSlot2','timeSlot3','timeSlot4','startDate','endDate','duration','dailyRate','customDailyRate','dailyRateTotal','discountRate','periodDays','periodSubtotal','discountAmount','periodFinalTotal','paymentMethod','paymentMethodOther','clientStatus','paymentStatus','keys','keysMode','updates']],['09 - AUTORIZZAZIONI',['authVet','authTransport','authData','authPhoto','signature']],['10 - PRIVACY E FIRME',['gdprConsent','customerSignatureData','dogsitterSignatureData']]];
+
+const tariffOptions = {
+  'Dog Walking': [
+    ['10 € — Dog Walking 30 minuti', 10],
+    ['15 € — Dog Walking 45 minuti', 15],
+    ['20 € — Dog Walking 60 minuti', 20],
+    ['18 € — pacchetto 2 uscite da 30 minuti', 18],
+    ['27 € — pacchetto 3 uscite da 30 minuti', 27],
+    ['35 € — pacchetto 4 uscite da 30 minuti', 35],
+    ['Extra +5 € — festivo', 5],
+    ['Extra +5 € — urgenza', 5],
+    ['Extra +5 € — gestione complessa', 5],
+    ['Tariffa personalizzata', 0]
+  ],
+  'Dogsitting a domicilio': [
+    ['20 € — fino a 2 ore', 20],
+    ['30 € — mezza giornata', 30],
+    ['50 € — giornata completa', 50],
+    ['Extra +5 € — festivo', 5],
+    ['Extra +5 € — urgenza', 5],
+    ['Extra +5 € — gestione complessa', 5],
+    ['Tariffa personalizzata', 0]
+  ],
+  'Visita a domicilio': [
+    ['10 € — visita 30 minuti', 10],
+    ['15 € — visita 45 minuti', 15],
+    ['20 € — visita 60 minuti', 20],
+    ['Extra +5 € — festivo', 5],
+    ['Extra +5 € — urgenza', 5],
+    ['Extra +5 € — gestione complessa', 5],
+    ['Tariffa personalizzata', 0]
+  ],
+  'Pensione diurna': [
+    ['25 € — mezza giornata', 25],
+    ['35 € — giornata completa', 35],
+    ['Extra +5 € — festivo', 5],
+    ['Extra +5 € — gestione complessa', 5],
+    ['Tariffa personalizzata', 0]
+  ],
+  'Accompagnamento veterinario': [
+    ['15 € — accompagnamento breve', 15],
+    ['25 € — accompagnamento standard', 25],
+    ['40 € — accompagnamento con attesa', 40],
+    ['Extra +5 € — festivo', 5],
+    ['Extra +5 € — urgenza', 5],
+    ['Tariffa personalizzata', 0]
+  ],
+  'Trasporto cane': [
+    ['15 € — tragitto breve', 15],
+    ['25 € — tragitto medio', 25],
+    ['40 € — tragitto lungo', 40],
+    ['Extra +5 € — festivo', 5],
+    ['Extra +5 € — urgenza', 5],
+    ['Tariffa personalizzata', 0]
+  ],
+  'Somministrazione farmaci': [
+    ['10 € — somministrazione semplice', 10],
+    ['15 € — somministrazione complessa', 15],
+    ['20 € — gestione continuativa', 20],
+    ['Extra +5 € — festivo', 5],
+    ['Extra +5 € — urgenza', 5],
+    ['Tariffa personalizzata', 0]
+  ],
+  'Servizio emergenza': [
+    ['15 € — intervento urgente breve', 15],
+    ['25 € — intervento urgente standard', 25],
+    ['35 € — intervento urgente esteso', 35],
+    ['Extra +5 € — festivo', 5],
+    ['Extra +5 € — gestione complessa', 5],
+    ['Tariffa personalizzata', 0]
+  ],
+  'Altro servizio': [
+    ['Da concordare', 0],
+    ['10 € — servizio breve', 10],
+    ['15 € — servizio standard', 15],
+    ['20 € — servizio esteso', 20],
+    ['25 € — servizio complesso', 25],
+    ['Tariffa personalizzata', 0]
+  ]
+};
+let tariffRenderedFor='';
+let customRateSelected=false;
+function parseMoney(value){
+  const n=parseFloat(String(value||'').replace(',', '.').replace(/[^\d.]/g,''));
+  return Number.isFinite(n)?n:0;
+}
+function updateTariffOptions(){
+  const service = form.elements.serviceType?.value || '';
+  const box = document.getElementById('tariffMultiSelect');
+  if(!box) return;
+  if(tariffRenderedFor===service) return;
+  tariffRenderedFor=service;
+  customRateSelected=false;
+  const options = tariffOptions[service] || [];
+  if(!options.length){
+    box.innerHTML='<div class="tariff-empty">Prima seleziona il tipo servizio.</div>';
+    updateTariffTotal();
+    return;
+  }
+  box.innerHTML=options.map(([label,amount],i)=>`
+    <label class="tariff-option">
+      <input type="checkbox" class="tariff-check" value="${label}" data-amount="${amount}">
+      <span>${label}</span>
+      <b>${amount ? amount + ' €' : ''}</b>
+    </label>
+  `).join('');
+  box.querySelectorAll('.tariff-check').forEach(ch=>ch.addEventListener('change',()=>{updateTariffTotal();updateUI();}));
+  updateTariffTotal();
+}
+function euro(value){
+  const n=Number(value)||0;
+  return `${n.toFixed(2).replace('.00','').replace('.',',')} €`;
+}
+function calcPeriodDays(){
+  const start=form.elements.startDate?.value;
+  const end=form.elements.endDate?.value;
+  if(!start || !end) return 1;
+  const a=new Date(start+'T00:00:00');
+  const b=new Date(end+'T00:00:00');
+  if(isNaN(a)||isNaN(b)||b<a) return 1;
+  return Math.floor((b-a)/(1000*60*60*24))+1;
+}
+function updateTariffTotal(){
+  const checks=[...document.querySelectorAll('.tariff-check:checked')];
+  const selected=checks.map(c=>c.value);
+  customRateSelected=selected.includes('Tariffa personalizzata');
+  const customField=document.querySelector('.custom-rate-field');
+  if(customField){
+    customField.classList.toggle('show',customRateSelected);
+    if(!customRateSelected && form.elements.customDailyRate) form.elements.customDailyRate.value='';
+  }
+  let dailyTotal=checks.reduce((sum,c)=>sum+parseMoney(c.dataset.amount),0);
+  if(customRateSelected) dailyTotal+=parseMoney(form.elements.customDailyRate?.value);
+
+  const days=calcPeriodDays();
+  const subtotal=dailyTotal*days;
+  const discountRate=parseMoney(form.elements.discountRate?.value);
+  const discountValue=subtotal*(discountRate/100);
+  const finalTotal=Math.max(0,subtotal-discountValue);
+
+  const setVal=(id,val)=>{const el=document.getElementById(id);if(el)el.value=val};
+  const setText=(id,val)=>{const el=document.getElementById(id);if(el)el.textContent=val};
+
+  setVal('dailyRateSummary',selected.join(' | '));
+  setVal('dailyRateTotal',euro(dailyTotal));
+  setVal('periodDays',String(days));
+  setVal('periodSubtotal',euro(subtotal));
+  setVal('discountAmount',euro(discountValue));
+  setVal('periodFinalTotal',euro(finalTotal));
+
+  setText('tariffTotalDisplay',euro(dailyTotal));
+  setText('periodDaysDisplay',String(days));
+  setText('periodSubtotalDisplay',euro(subtotal));
+  setText('discountDisplay',discountRate ? discountRate+'%' : '0%');
+  setText('discountAmountDisplay',euro(discountValue));
+  setText('periodFinalTotalDisplay',euro(finalTotal));
+}
+
+
+const DOGSITTER_PROFILE_KEY='dogsitter_saved_profiles_v1';
+const dogsitterProfileFields=['dogsitterName','dogsitterPhone','dogsitterEmail','dogsitterRole','dogsitterRoleOther','dogsitterOrganization','dogsitterOrganizationName','dogsitterArea','dogsitterAreaOther'];
+const defaultDogsitterProfiles=[
+  {
+    id:'giovanni-k9',
+    label:'Giovanni Napoletano — K9 Mantrailing HRDD Tattico Napoletano',
+    data:{
+      dogsitterName:'Giovanni Napoletano',
+      dogsitterPhone:'3281650082',
+      dogsitterEmail:'napoletano.giovanni.81@gmail.com',
+      dogsitterRole:'Referente associazione',
+      dogsitterOrganization:'K9 Mantrailing HRDD Tattico Napoletano',
+      dogsitterOrganizationName:'',
+      dogsitterArea:'San Giuliano Milanese',
+      dogsitterAreaOther:''
+    }
+  },
+  {
+    id:'mantrailing-ragio-sole',
+    label:'MANTRAILING RAGIÒ DI SOLE',
+    data:{
+      dogsitterName:'',
+      dogsitterPhone:'',
+      dogsitterEmail:'',
+      dogsitterRole:'Referente associazione',
+      dogsitterOrganization:'MANTRAILING RAGIÒ DI SOLE',
+      dogsitterOrganizationName:'MANTRAILING RAGIÒ DI SOLE',
+      dogsitterArea:'Servizio da concordare',
+      dogsitterAreaOther:''
+    }
+  }
+];
+function getSavedDogsitterProfiles(){
+  try{
+    const raw=localStorage.getItem(DOGSITTER_PROFILE_KEY);
+    const saved=raw?JSON.parse(raw):[];
+    const merged=[...defaultDogsitterProfiles];
+    saved.forEach(p=>{
+      if(!merged.some(x=>x.id===p.id)) merged.push(p);
+    });
+    return merged;
+  }catch(e){
+    return [...defaultDogsitterProfiles];
+  }
+}
+function setSavedDogsitterProfiles(profiles){
+  const custom=profiles.filter(p=>!defaultDogsitterProfiles.some(d=>d.id===p.id));
+  localStorage.setItem(DOGSITTER_PROFILE_KEY,JSON.stringify(custom));
+}
+function refreshDogsitterProfileSelect(){
+  const select=document.getElementById('dogsitterProfileSelect');
+  if(!select) return;
+  const current=select.value;
+  const profiles=getSavedDogsitterProfiles();
+  select.innerHTML='<option value="">Seleziona profilo salvato</option>'+profiles.map(p=>`<option value="${p.id}">${p.label}</option>`).join('');
+  if(profiles.some(p=>p.id===current)) select.value=current;
+}
+function applyDogsitterProfile(id){
+  const profile=getSavedDogsitterProfiles().find(p=>p.id===id);
+  if(!profile) return;
+  Object.entries(profile.data||{}).forEach(([k,v])=>{
+    if(form.elements[k]) form.elements[k].value=v||'';
+  });
+  updateUI();
+}
+function saveCurrentDogsitterProfile(){
+  const d=collectData();
+  const name=(d.dogsitterName||'').trim();
+  const org=(d.dogsitterOrganizationName||d.dogsitterOrganization||'').trim();
+  const phone=(d.dogsitterPhone||'').trim();
+  if(!name && !org){
+    alert('Inserisci almeno nome dogsitter o ente/associazione prima di salvare.');
+    return;
+  }
+  const label=[name,org,phone].filter(Boolean).join(' — ');
+  const profile={
+    id:'custom-'+Date.now(),
+    label,
+    data:{}
+  };
+  dogsitterProfileFields.forEach(k=>profile.data[k]=d[k]||'');
+  const profiles=getSavedDogsitterProfiles();
+  profiles.push(profile);
+  setSavedDogsitterProfiles(profiles);
+  refreshDogsitterProfileSelect();
+  const select=document.getElementById('dogsitterProfileSelect');
+  if(select) select.value=profile.id;
+  alert('Dati dogsitter salvati.');
+}
+function removeSelectedDogsitterProfile(){
+  const select=document.getElementById('dogsitterProfileSelect');
+  if(!select || !select.value){
+    alert('Seleziona un profilo da rimuovere.');
+    return;
+  }
+  const isDefault=defaultDogsitterProfiles.some(p=>p.id===select.value);
+  if(isDefault){
+    alert('Questo è un profilo predefinito e non può essere eliminato.');
+    return;
+  }
+  const profiles=getSavedDogsitterProfiles().filter(p=>p.id!==select.value);
+  setSavedDogsitterProfiles(profiles);
+  select.value='';
+  refreshDogsitterProfileSelect();
+  alert('Profilo rimosso.');
+}
+
+logoInput.addEventListener('change',()=>{const file=logoInput.files&&logoInput.files[0];if(!file)return;const r=new FileReader();r.onload=()=>{logoDataUrl=r.result;logoPreview.src=logoDataUrl;logoPreview.style.display='block';logoPlaceholder.style.display='none';miniLogo.innerHTML=`<img src="${logoDataUrl}" alt="Logo">`;const probe=new Image();probe.onload=()=>{logoRatio=Math.max(.35,Math.min(3.2,probe.naturalWidth/probe.naturalHeight));document.querySelectorAll('.brand-logo,.logo-box,.summary-logo').forEach(b=>b.classList.add('has-logo'))};probe.src=logoDataUrl};r.readAsDataURL(file)});
+function collectData(){const fd=new FormData(form),out={};for(const[k,v]of fd.entries())out[k]=v;out.compiledAt=new Date().toLocaleString('it-IT');return out}
+function shouldShow(rule,d){const [name,raw]=rule.split(':');if(name==='customRateSelected')return !!customRateSelected;const v=d[name]||'';if(raw==='any')return !!v;return raw.split('|').includes(v)}
+function updateConditionals(){const d=collectData();document.querySelectorAll('.conditional').forEach(el=>{const show=shouldShow(el.dataset.showWhen,d);el.classList.toggle('show',show);el.querySelectorAll('input,select,textarea').forEach(c=>{if(!show)c.value='';})})}
+function updateUI(){updateTariffOptions();updateTariffTotal();updateConditionals();const fields=Array.from(form.querySelectorAll('input:not([type=file]),select,textarea')).filter(el=>el.closest('.conditional')?el.closest('.conditional').classList.contains('show'):true);const done=fields.filter(el=>String(el.value||'').trim()).length;const pct=Math.round(done/Math.max(fields.length,1)*100);progressBar.style.width=pct+'%';ring.style.setProperty('--value',pct);ringText.textContent=pct+'%';progressText.textContent=pct<40?'Compilazione avviata.':pct<80?'Scheda quasi completa.':'Scheda pronta per il PDF.';const d=collectData();const sumOwnerEl=document.getElementById('sumOwner'),sumDogEl=document.getElementById('sumDog'),sumServiceEl=document.getElementById('sumService'),sumPhoneEl=document.getElementById('sumPhone');if(sumOwnerEl)sumOwnerEl.textContent=d.ownerName||'—';if(sumDogEl)sumDogEl.textContent=d.dogName||'—';if(sumServiceEl)sumServiceEl.textContent=d.serviceType||'Dogsitting';if(sumPhoneEl)sumPhoneEl.textContent=d.ownerPhone||'—';const heroOwnerEl=document.getElementById('heroOwner'),heroDogEl=document.getElementById('heroDog');if(heroOwnerEl)heroOwnerEl.textContent=d.ownerName||'—';if(heroDogEl)heroDogEl.textContent=d.dogName||'—';buildFinalSummary()}
+form.addEventListener('input',updateUI);form.addEventListener('change',updateUI);if(form.elements.customDailyRate)form.elements.customDailyRate.addEventListener('input',()=>{updateTariffTotal();updateUI();});['startDate','endDate','discountRate'].forEach(k=>{if(form.elements[k])form.elements[k].addEventListener('change',()=>{updateTariffTotal();updateUI();});});updateUI();
+if(demoFillBtn) demoFillBtn.addEventListener('click',()=>{const s={ownerName:'Mario Rossi',ownerPhone:'333 1234567',ownerEmail:'mario.rossi@email.it',ownerArea:'San Giuliano Milanese',emergencyContactType:'Familiare convivente',emergencyContactName:'Laura Rossi',emergencyContactPhone:'333 7654321',availability:'Sempre reperibile',dogsitterName:'Giovanni Napoletano',dogsitterPhone:'3281650082',dogsitterEmail:'napoletano.giovanni.81@gmail.com',dogsitterRole:'Referente associazione',dogsitterOrganization:'K9 Mantrailing HRDD Tattico Napoletano',dogsitterArea:'San Giuliano Milanese',dogName:'Luna',breedType:'Meticcio',breedDetail:'Meticcio taglia media',size:'Media',ageRange:'Adulto 18 mesi-7 anni',ageDetail:'4 anni',weightDetail:'18 kg',sex:'Femmina',sterilized:'Sì',microchip:'Presente',microchipNumber:'Da verificare',vetStatus:'Veterinario indicato dal cliente',vetName:'Clinica Veterinaria',vetPhone:'030 000000',vaccines:'Aggiornate',parasites:'Aggiornato',illnesses:'Nessuna patologia nota',allergies:'Nessuna allergia nota',medicines:'Nessuna terapia',healthRisk:'Basso',foodType:'Crocchette',foodDetail:'Crocchette abituali del proprietario',meals:'2 pasti al giorno',mealTimes:'8:00 e 19:00',treats:'Solo premi forniti dal proprietario',treatsDetail:'Premi monoproteici',homeRules:'Non può salire su divano/letto',character:'Socievole',adults:'Socievole',children:'Socievole',dogs:'Selettivo',fears:'Rumori forti',fearsDetail:'Motorini e botti',biteHistory:'Nessun episodio',resourceGuarding:'Assente',equipment:'Pettorina ad H',equipmentDetail:'Pettorina taglia M',dogTriggers:'Vuole salutare',movingTriggers:'Indifferente',avoidAreas:'Aree cani',avoidAreasDetail:'Evitare aree affollate',offLeash:'No',walkLevel:'Media attenzione',serviceType:'Dog Walking',frequency:'Settimanale',dailyVisits:'2 uscite / visite al giorno',timeSlot1:'Pausa pranzo 11:00-14:00',timeSlot2:'Tardo pomeriggio 17:00-19:00',startDate:'',endDate:'',discountRate:'5',duration:'30 minuti',paymentMethod:'Bonifico',keys:'No',updates:'Messaggio WhatsApp',authVet:'Autorizzo',authTransport:'Autorizzo',authData:'Autorizzo',authPhoto:'Autorizzo uso privato',signature:'Mario Rossi'};for(const[k,v]of Object.entries(s))if(form.elements[k])form.elements[k].value=v;updateTariffOptions();document.querySelectorAll('.tariff-check').forEach(c=>{if(['18 € — pacchetto 2 uscite da 30 minuti','Extra +5 € — festivo'].includes(c.value))c.checked=true});updateTariffTotal();document.querySelectorAll('details.step').forEach(d=>d.open=true);updateUI();document.getElementById('modulo').scrollIntoView({behavior:'smooth'})});
+
+function esc(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function buildFinalSummary(){
+  const d=collectData();
+  const box=document.getElementById('finalSummaryContent');
+  if(!box)return;
+  const logoImg=document.getElementById('summaryLogoImg');
+  const logoFallback=document.getElementById('summaryLogoFallback');
+  if(logoDataUrl && logoImg){
+    logoImg.src=logoDataUrl;
+    logoImg.style.display='block';
+    if(logoFallback) logoFallback.style.display='none';
+  }
+  let htmlOut='';
+  sectionGroups.forEach(group=>{
+    const title=group[0].replace(/^\d+\s-\s/,'');
+    const rows=group[1].filter(k=>String(d[k]||'').trim()).map(k=>{const val=(k==='customerSignatureData'||k==='dogsitterSignatureData')?'Firmata':d[k];return `<li><strong>${esc(labels[k]||k)}</strong><span>${esc(val)}</span></li>`}).join('');
+    if(rows) htmlOut+=`<section class="summary-section"><h3>${esc(title)}</h3><ul>${rows}</ul></section>`;
+  });
+  box.innerHTML=htmlOut || '<div class="empty-summary">Compila il modulo per visualizzare il riepilogo.</div>';
+}
+
+
+function setupDogsitterProfiles(){
+  refreshDogsitterProfileSelect();
+  const select=document.getElementById('dogsitterProfileSelect');
+  const saveBtn=document.getElementById('saveDogsitterProfile');
+  const removeBtn=document.getElementById('removeDogsitterProfile');
+  if(select) select.addEventListener('change',()=>applyDogsitterProfile(select.value));
+  if(saveBtn) saveBtn.addEventListener('click',saveCurrentDogsitterProfile);
+  if(removeBtn) removeBtn.addEventListener('click',removeSelectedDogsitterProfile);
+}
+setupDogsitterProfiles();
+
+
+function setupSignaturePad(canvasId, inputId, clearBtnId){
+  const canvas=document.getElementById(canvasId);
+  const input=document.getElementById(inputId);
+  const clearBtn=document.getElementById(clearBtnId);
+  if(!canvas||!input) return;
+
+  const ctx=canvas.getContext('2d');
+  let drawing=false;
+  let hasSignature=false;
+
+  function resizeCanvas(){
+    const rect=canvas.getBoundingClientRect();
+    const ratio=window.devicePixelRatio||1;
+    const oldData=hasSignature ? canvas.toDataURL('image/png') : '';
+    canvas.width=Math.max(1,Math.floor(rect.width*ratio));
+    canvas.height=Math.max(1,Math.floor(rect.height*ratio));
+    ctx.setTransform(ratio,0,0,ratio,0,0);
+    ctx.lineWidth=2.8;
+    ctx.lineCap='round';
+    ctx.lineJoin='round';
+    ctx.strokeStyle='#211633';
+    ctx.fillStyle='#fffdfb';
+    ctx.fillRect(0,0,rect.width,rect.height);
+    if(oldData){
+      const img=new Image();
+      img.onload=()=>ctx.drawImage(img,0,0,rect.width,rect.height);
+      img.src=oldData;
+    }
+  }
+
+  function pos(evt){
+    const rect=canvas.getBoundingClientRect();
+    const t=evt.touches&&evt.touches[0]?evt.touches[0]:evt;
+    return {x:t.clientX-rect.left,y:t.clientY-rect.top};
+  }
+  function start(evt){
+    evt.preventDefault();
+    drawing=true;
+    const p=pos(evt);
+    ctx.beginPath();
+    ctx.moveTo(p.x,p.y);
+  }
+  function move(evt){
+    if(!drawing) return;
+    evt.preventDefault();
+    const p=pos(evt);
+    ctx.lineTo(p.x,p.y);
+    ctx.stroke();
+    hasSignature=true;
+    input.value=canvas.toDataURL('image/png');
+    buildFinalSummary();
+  }
+  function end(){
+    if(!drawing) return;
+    drawing=false;
+    input.value=hasSignature ? canvas.toDataURL('image/png') : '';
+    updateUI();
+  }
+  function clear(){
+    hasSignature=false;
+    input.value='';
+    const rect=canvas.getBoundingClientRect();
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle='#fffdfb';
+    ctx.fillRect(0,0,rect.width,rect.height);
+    updateUI();
+  }
+
+  canvas.addEventListener('mousedown',start);
+  canvas.addEventListener('mousemove',move);
+  window.addEventListener('mouseup',end);
+  canvas.addEventListener('touchstart',start,{passive:false});
+  canvas.addEventListener('touchmove',move,{passive:false});
+  canvas.addEventListener('touchend',end);
+  if(clearBtn) clearBtn.addEventListener('click',clear);
+  window.addEventListener('resize',resizeCanvas);
+  setTimeout(resizeCanvas,150);
+}
+function setupSignatures(){
+  setupSignaturePad('customerSignaturePad','customerSignatureData','clearCustomerSignature');
+  setupSignaturePad('dogsitterSignaturePad','dogsitterSignatureData','clearDogsitterSignature');
+}
+setupSignatures();
+
+function safeName(s){return String(s||'cane').replace(/[^\w\-]+/g,'_').replace(/^_+|_+$/g,'')}
+function addLogo(doc){
+  const maxH=25;
+  const maxW=62;
+  const ratio=logoRatio||1;
+  let w=maxH*ratio;
+  let h=maxH;
+  if(w>maxW){w=maxW;h=maxW/ratio}
+  const x=14,y=7;
+  if(!logoDataUrl){
+    doc.setDrawColor(250,204,21);
+    doc.roundedRect(x,y,24,24,4,4,'S');
+    doc.setTextColor(255,255,255);
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(8);
+    doc.text('LOGO',x+5,y+15);
+    return;
+  }
+  doc.setFillColor(255,255,255);
+  doc.roundedRect(x-1,y-1,w+2,h+2,3,3,'F');
+  try{doc.addImage(logoDataUrl,'PNG',x,y,w,h,undefined,'FAST')}
+  catch(e){try{doc.addImage(logoDataUrl,'JPEG',x,y,w,h,undefined,'FAST')}catch(_){}}
+}
+function footer(doc){const h=doc.internal.pageSize.height;doc.setDrawColor(239,222,254);doc.line(14,h-12,196,h-12);doc.setTextColor(108,97,120);doc.setFontSize(8);doc.text('Modulo Cliente Dogsitter - documento generato automaticamente',14,h-7);doc.setTextColor(33,22,51)}
+function section(doc,title,y,i){if(y>256){doc.addPage();y=18;footer(doc)}const colors=[[109,40,217],[249,115,22],[6,182,212],[236,72,153],[37,99,235],[34,197,94],[239,68,68],[217,146,0]],c=colors[i%colors.length];doc.setFillColor(c[0],c[1],c[2]);doc.roundedRect(14,y-5,182,10,2.5,2.5,'F');doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(10.5);doc.text(title,18,y+1.5);doc.setTextColor(33,22,51);return y+10}
+function line(doc,label,value,y){if(!String(value||'').trim())return y;const displayValue=String(value||'').startsWith('data:image')?'Firmata':value;const h=doc.internal.pageSize.height,lines=doc.splitTextToSize(`${label}: ${displayValue}`,178);if(y+lines.length*5.4>h-18){doc.addPage();y=18;footer(doc)}doc.setFont('helvetica','normal');doc.setFontSize(9.4);doc.text(lines,16,y);return y+lines.length*5.4+2.2}
+async function makePdf(){const{jsPDF}=window.jspdf,d=collectData(),doc=new jsPDF({unit:'mm',format:'a4'});let y=52;doc.setFillColor(76,29,149);doc.rect(0,0,210,42,'F');doc.setFillColor(236,72,153);doc.circle(196,6,32,'F');doc.setFillColor(250,204,21);doc.circle(178,36,14,'F');addLogo(doc);doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(18);doc.text('Modulo Cliente Dogsitter',82,17);doc.setFont('helvetica','normal');doc.setFontSize(9.5);doc.text('K9 Mantrailing HRDD Tattico Napoletano',82,25);doc.setTextColor(33,22,51);doc.setFillColor(255,250,240);doc.setDrawColor(239,222,254);doc.roundedRect(14,y-5,182,27,4,4,'FD');[['Proprietario',d.ownerName],['Telefono',d.ownerPhone],['Cane',d.dogName],['Servizio',d.serviceType]].forEach((it,i)=>{const x=20+i*44;doc.setTextColor(109,40,217);doc.setFont('helvetica','bold');doc.setFontSize(8.4);doc.text(it[0],x,y+2);doc.setTextColor(33,22,51);doc.setFont('helvetica','normal');doc.setFontSize(8.6);doc.text(doc.splitTextToSize(it[1]||'-',38),x,y+8)});y+=35;sectionGroups.forEach((s,i)=>{y=section(doc,s[0],y,i);s[1].forEach(k=>y=line(doc,labels[k]||k,d[k],y));y+=3});
+function addSignatureImage(title,dataUrl,y){
+  if(!dataUrl || !String(dataUrl).startsWith('data:image')) return y;
+  if(y>220){doc.addPage();y=18;footer(doc)}
+  doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(109,40,217);doc.text(title,16,y);
+  y+=4;
+  doc.setDrawColor(239,222,254);doc.roundedRect(16,y,90,32,3,3,'S');
+  try{doc.addImage(dataUrl,'PNG',18,y+2,86,28,undefined,'FAST')}catch(e){}
+  return y+38;
+}
+y=addSignatureImage('Firma cliente',d.customerSignatureData,y);
+y=addSignatureImage('Firma dogsitter',d.dogsitterSignatureData,y);
+y=section(doc,'COMPILAZIONE',y,0);y=line(doc,'Compilato il',d.compiledAt,y);footer(doc);return{d,doc,filename:`Modulo_Dogsitter_${safeName(d.dogName)}.pdf`}}
+previewBtn.addEventListener('click',async()=>{if(!form.reportValidity())return;const{doc,filename}=await makePdf();doc.save(filename)});
+function setStatus(message,type=''){
+  if(!statusEl) return;
+  statusEl.classList.remove('status-ok','status-warn','status-error');
+  if(type) statusEl.classList.add('status-'+type);
+  statusEl.textContent=message;
+}
+async function sendPdfHandler(e){
+  e.preventDefault();
+
+  if(!form.elements.customerSignatureData?.value){setStatus('Firma cliente obbligatoria prima dell’invio.','error');document.getElementById('customerSignaturePad')?.scrollIntoView({behavior:'smooth',block:'center'});return;}if(!form.elements.dogsitterSignatureData?.value){setStatus('Firma dogsitter obbligatoria prima dell’invio.','error');document.getElementById('dogsitterSignaturePad')?.scrollIntoView({behavior:'smooth',block:'center'});return;}if(!form.reportValidity()){
+    setStatus('Compila i campi obbligatori prima di inviare il PDF.','error');
+    const invalid=form.querySelector(':invalid');
+    if(invalid) invalid.scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+
+  setStatus('Preparazione PDF in corso...','warn');
+
+  let result;
+  try{
+    result=await makePdf();
+  }catch(err){
+    console.error(err);
+    setStatus('Errore durante la generazione del PDF. Controlla i dati inseriti e riprova.','error');
+    return;
+  }
+
+  const {d,doc,filename}=result;
+  const pdfBase64=doc.output('datauristring').split(',')[1];
+
+  const isLocal =
+    window.location.protocol === 'file:' ||
+    window.location.hostname === '' ||
+    window.location.hostname === 'localhost' ||
+    window.location.hostname === '127.0.0.1';
+
+  if(isLocal){
+    doc.save(filename);
+    setStatus('PDF generato e scaricato. Invio email, Google Sheets e Google Drive funzioneranno dopo la pubblicazione su Netlify.','warn');
+    return;
+  }
+
+  setStatus('Invio PDF in corso...','warn');
+
+  try{
+    const res=await fetch('/.netlify/functions/send-pdf',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({data:d,pdfBase64,filename})
+    });
+
+    let json={};
+    try{ json=await res.json(); }catch(_){}
+
+    if(!res.ok) throw new Error(json.error || 'Invio non riuscito');
+
+    setStatus('PDF inviato correttamente. Email, Google Sheets e Google Drive aggiornati.','ok');
+  }catch(err){
+    console.error(err);
+    doc.save(filename);
+    setStatus('Invio automatico non riuscito. Ho scaricato il PDF sul dispositivo. Controlla configurazione Netlify/Resend/Google e riprova.','error');
+  }
+}
+form.addEventListener('submit',sendPdfHandler);
+if('serviceWorker'in navigator)navigator.serviceWorker.register('/sw.js').catch(()=>{});
+</script>
+</body>
+</html>
