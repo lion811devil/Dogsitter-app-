@@ -24,15 +24,6 @@ exports.handler = async function(event) {
     const FROM_EMAIL = process.env.FROM_EMAIL || "";
     const GOOGLE_SHEETS_WEBHOOK_URL = process.env.GOOGLE_SHEETS_WEBHOOK_URL || "";
 
-    console.log("CONFIG_CHECK", {
-      hasResendApiKey: Boolean(RESEND_API_KEY),
-      hasToEmail: Boolean(TO_EMAIL),
-      hasFromEmail: Boolean(FROM_EMAIL),
-      hasGoogleWebhook: Boolean(GOOGLE_SHEETS_WEBHOOK_URL),
-      fromEmail: FROM_EMAIL || null,
-      toEmail: TO_EMAIL || null
-    });
-
     const missing = [];
     if (!RESEND_API_KEY) missing.push("RESEND_API_KEY");
     if (!TO_EMAIL) missing.push("TO_EMAIL");
@@ -46,39 +37,31 @@ exports.handler = async function(event) {
     const finalTotal = data.periodFinalTotal || data.dailyRateTotal || "-";
 
     let googleResult = null;
+    let pdfUrl = "";
+
+    const googleResponse = await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ data, filename, pdfBase64 })
+    });
+
+    const googleText = await googleResponse.text();
 
     try {
-      const googleResponse = await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data, filename, pdfBase64 })
-      });
+      googleResult = JSON.parse(googleText);
+      pdfUrl = googleResult.pdfUrl || "";
+    } catch (_) {
+      googleResult = { raw: googleText };
+    }
 
-      const googleText = await googleResponse.text();
+    console.log("GOOGLE_RESULT", googleResult);
 
-      googleResult = {
-        ok: googleResponse.ok,
-        status: googleResponse.status,
-        response: googleText.slice(0, 1000)
-      };
-
-      console.log("GOOGLE_RESULT", googleResult);
-
-      if (!googleResponse.ok) {
-        return json(500, {
-          ok: false,
-          step: "google",
-          error: "Errore Google Sheets/Drive",
-          google: googleResult
-        });
-      }
-    } catch (googleError) {
-      console.log("GOOGLE_EXCEPTION", googleError.message);
-
+    if (!googleResponse.ok) {
       return json(500, {
         ok: false,
         step: "google",
-        error: googleError.message
+        error: "Errore Google Sheets/Drive",
+        google: googleResult
       });
     }
 
@@ -97,74 +80,72 @@ exports.handler = async function(event) {
       <p><strong>Pagamento:</strong> ${data.paymentMethodOther || data.paymentMethod || "-"}</p>
       <p><strong>Stato pagamento:</strong> ${data.paymentStatus || "-"}</p>
       <p><strong>GDPR:</strong> ${data.gdprConsent || "-"}</p>
+      ${pdfUrl ? `<p><strong>Link PDF Drive:</strong> <a href="${pdfUrl}">${pdfUrl}</a></p>` : ""}
       <p>PDF completo allegato.</p>
     </div>`;
 
-    const sendEmail = async ({ to, subject, html, attachments }) => {
-      const response = await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${RESEND_API_KEY}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          from: FROM_EMAIL,
-          to: Array.isArray(to) ? to : [to],
-          subject,
-          html,
-          attachments
-        })
-      });
-
-      const text = await response.text();
-
-      let parsed = null;
-      try {
-        parsed = JSON.parse(text);
-      } catch (_) {
-        parsed = { raw: text };
-      }
-
-      console.log("RESEND_RESULT", {
-        ok: response.ok,
-        status: response.status,
-        response: parsed
-      });
-
-      if (!response.ok) {
-        throw new Error(`Resend error ${response.status}: ${text}`);
-      }
-
-      return parsed;
-    };
-
-    const ownerEmail = await sendEmail({
-      to: TO_EMAIL,
-      subject: `Nuovo modulo dogsitter - ${data.dogName || "cane"} - ${data.ownerName || "cliente"}`,
-      html: ownerHtml,
-      attachments: [{ filename, content: pdfBase64 }]
+    const emailResponse = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${RESEND_API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        from: FROM_EMAIL,
+        to: [TO_EMAIL],
+        subject: `Nuovo modulo dogsitter - ${data.dogName || "cane"} - ${data.ownerName || "cliente"}`,
+        html: ownerHtml,
+        attachments: [{ filename, content: pdfBase64 }]
+      })
     });
 
-    let clientEmail = null;
+    const emailText = await emailResponse.text();
+    let ownerEmail = null;
 
-    if (data.ownerEmail && String(data.ownerEmail).includes("@")) {
-      clientEmail = await sendEmail({
-        to: data.ownerEmail,
-        subject: "Modulo dogsitter ricevuto correttamente",
-        html: `<div style="font-family:Arial,sans-serif;line-height:1.5;color:#211633">
-          <h2>Modulo ricevuto correttamente</h2>
-          <p>Ciao ${data.ownerName || ""}, il modulo relativo a <strong>${data.dogName || "il tuo cane"}</strong> è stato inviato correttamente.</p>
-          <p><strong>Totale finale concordato:</strong> ${finalTotal}</p>
-          <p>Grazie.</p>
-        </div>`
-      });
+    try {
+      ownerEmail = JSON.parse(emailText);
+    } catch (_) {
+      ownerEmail = { raw: emailText };
     }
+
+    console.log("RESEND_RESULT", {
+      ok: emailResponse.ok,
+      status: emailResponse.status,
+      response: ownerEmail
+    });
+
+    if (!emailResponse.ok) {
+      throw new Error(`Resend error ${emailResponse.status}: ${emailText}`);
+    }
+
+    const cleanPhone = String(data.ownerPhone || "")
+      .replace(/\D/g, "")
+      .replace(/^0+/, "");
+
+    const whatsappPhone = cleanPhone.startsWith("39") ? cleanPhone : `39${cleanPhone}`;
+
+    const whatsappMessage = [
+      `Ciao ${data.ownerName || ""},`,
+      "",
+      `il tuo modulo Dogsitter per ${data.dogName || "il tuo cane"} è stato registrato correttamente.`,
+      "",
+      pdfUrl ? `Puoi visualizzare il PDF qui:` : "",
+      pdfUrl || "",
+      "",
+      "Grazie.",
+      "K9 Mantrailing HRDD Tattico Napoletano"
+    ].filter(Boolean).join("\n");
+
+    const whatsappUrl = cleanPhone
+      ? `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(whatsappMessage)}`
+      : "";
 
     return json(200, {
       ok: true,
       google: googleResult,
+      pdfUrl,
       ownerEmail,
-      clientEmail
+      whatsappUrl
     });
 
   } catch (err) {
